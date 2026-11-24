@@ -1,0 +1,1435 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta
+			name="description"
+			content="InnoHub connects research-led innovations with industry, investors, government and communities."
+		/>
+		<title>InnoHub — Innovation Marketplace</title>
+		<link rel="icon" href="favicon.svg" type="image/svg+xml" />
+		<link rel="preconnect" href="https://cdn.jsdelivr.net" />
+
+		<script src="https://cdn.tailwindcss.com"></script>
+		<script>
+			tailwind.config = {
+				theme: {
+					screens: { sm: "561px", md: "821px", lg: "1101px" },
+					extend: {
+						colors: {
+							navy: "#061a39",
+							navy2: "#0a2854",
+							ink: "#0c1d3c",
+							brandblue: "#315fde",
+							gold: "#ffc928",
+							teal: "#14ad99",
+							muted: "#63708a",
+							line: "#dce4ef",
+							surface: "#f4f7fb",
+						},
+						accentColor: { trl: "#13bbad" },
+						boxShadow: {
+							panel: "0 4px 12px rgba(3,24,49,.13)",
+							card: "0 4px 14px rgba(11,35,77,.05)",
+						},
+					},
+				},
+			};
+		</script>
+		<script src="https://cdn.jsdelivr.net/npm/vue@3.5.21/dist/vue.global.prod.js"></script>
+
+		<style>
+			html {
+				scroll-behavior: smooth;
+			}
+			body {
+				background: radial-gradient(ellipse at 50% 40%, #fff 0, #f1f6fa 70%);
+			}
+			:focus-visible {
+				outline: 3px solid #159fb6;
+				outline-offset: 4px;
+			}
+
+			.outline-btn {
+				display: inline-flex;
+				align-items: center;
+				gap: 9px;
+				white-space: nowrap;
+				padding: 9px 17px;
+				border: 1px solid #9cadc5;
+				border-radius: 6px;
+				background: rgba(255, 255, 255, 0.65);
+				color: #061a39;
+				font-size: 0.75rem;
+				font-weight: 700;
+				transition:
+					border-color 0.15s,
+					color 0.15s;
+			}
+			.outline-btn:hover {
+				border-color: #315fde;
+				color: #315fde;
+			}
+
+			/* Multi-stop gradient text — background-clip has no Tailwind equivalent. */
+			.hero-title-accent {
+				background-image: linear-gradient(
+					90deg,
+					#ffd21c 3%,
+					#91c65e 44%,
+					#04a7d6 98%
+				);
+				-webkit-background-clip: text;
+				background-clip: text;
+				color: transparent;
+			}
+			.hero-shade {
+				position: absolute;
+				inset: 0;
+				background:
+					linear-gradient(
+						90deg,
+						rgba(1, 19, 41, 0.96),
+						rgba(1, 24, 47, 0.83) 37%,
+						rgba(4, 22, 41, 0.1) 69%
+					),
+					linear-gradient(0deg, rgba(1, 19, 34, 0.7), transparent 60%);
+			}
+			.brand-mark {
+				display: grid;
+				grid-template-columns: repeat(3, 6px);
+				align-items: end;
+				gap: 4px;
+				width: 35px;
+				height: 45px;
+				padding: 5px;
+				border: 1px solid rgba(255, 201, 40, 0.7);
+				border-radius: 45%;
+			}
+			.brand-mark i {
+				display: block;
+				background: #ffc928;
+				border-radius: 3px 3px 0 0;
+			}
+			.brand-mark i:nth-child(1) {
+				height: 15px;
+			}
+			.brand-mark i:nth-child(2) {
+				height: 32px;
+			}
+			.brand-mark i:nth-child(3) {
+				height: 23px;
+			}
+
+			/* Metrics strip: 2x2 on phones, single row above 560px, with hairline dividers. */
+			.metrics > div {
+				display: flex;
+				gap: 14px;
+				align-items: center;
+				padding: 12px;
+				border-bottom: 1px solid #dce4ef;
+			}
+			.metrics > div:nth-last-child(-n + 2) {
+				border-bottom: 0;
+			}
+			.metrics > div:nth-child(odd) {
+				border-right: 1px solid #dce4ef;
+			}
+			@media (min-width: 561px) {
+				.metrics > div {
+					padding: 0 20px;
+					border-bottom: 0;
+					border-right: 1px solid #dce4ef;
+				}
+				.metrics > div:nth-child(odd) {
+					border-right: 1px solid #dce4ef;
+				}
+				.metrics > div:last-child {
+					border-right: 0;
+				}
+			}
+			@media (min-width: 1101px) {
+				.metrics > div {
+					padding: 0 28px;
+				}
+			}
+
+			/* TRL 9-stage track: connector line behind the numbered nodes. */
+			.trl-stages {
+				display: grid;
+				gap: 3px;
+				position: relative;
+			}
+			.trl-stage {
+				text-align: center;
+			}
+			.trl-stage b {
+				display: grid;
+				place-items: center;
+				width: 35px;
+				height: 35px;
+				margin: 0 auto 12px;
+				border-radius: 9999px;
+				background: #263c5b;
+				box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.02);
+				font-size: 1.15rem;
+				font-weight: 400;
+				color: #fff;
+			}
+			.trl-stage small {
+				display: block;
+				max-width: 64px;
+				margin: 0 auto;
+				font-size: 0.63rem;
+				line-height: 1.35;
+				color: #c7d3e4;
+			}
+			.trl-stage.ready b {
+				background: #0b9e9c;
+				box-shadow:
+					0 0 0 7px rgba(33, 199, 187, 0.13),
+					0 0 22px rgba(33, 199, 187, 0.4);
+			}
+			.trl-stage.ready small {
+				color: #eaf6f5;
+			}
+			@media (min-width: 561px) {
+				.trl-stages {
+					grid-template-columns: repeat(9, 1fr);
+				}
+				.trl-stages::before {
+					content: "";
+					position: absolute;
+					top: 19px;
+					height: 2px;
+					left: 5%;
+					right: 5%;
+					background: #355069;
+				}
+			}
+			@media (max-width: 560px) {
+				.trl-stages {
+					grid-template-columns: repeat(9, minmax(45px, 1fr));
+					overflow-x: auto;
+					padding: 5px 0 10px;
+				}
+				.trl-stage b {
+					width: 28px;
+					height: 28px;
+					font-size: 1rem;
+				}
+				.trl-stage small {
+					font-size: 0.6rem;
+				}
+			}
+
+			@media (prefers-reduced-motion: reduce) {
+				html {
+					scroll-behavior: auto;
+				}
+				*,
+				*::before,
+				*::after {
+					transition: none !important;
+				}
+			}
+		</style>
+	</head>
+
+	<body class="font-sans text-ink antialiased">
+		<div id="app">
+			<!-- ============================ HEADER ============================ -->
+			<header
+				class="relative z-20 border-b border-[#334052] bg-[linear-gradient(110deg,#021528,#071d3d)]"
+				:class="{ 'menu-open': mobileMenu }"
+			>
+				<nav
+					class="mx-auto flex min-h-[74px] max-w-[1180px] items-center justify-between gap-4 px-5 md:min-h-[86px]"
+					aria-label="Main navigation"
+				>
+					<a
+						class="flex shrink-0 items-center gap-3 text-white md:gap-[13px]"
+						href="./"
+						aria-label="InnoHub home"
+					>
+						<span class="brand-mark"><i></i><i></i><i></i></span>
+						<span>
+							<strong
+								class="block text-[1.35rem] font-extrabold leading-none tracking-[-.035em] md:text-[1.65rem]"
+								>{{ content.brand }}</strong
+							>
+							<small
+								class="mt-[5px] block text-[.6rem] tracking-[.14em] text-gold md:text-[.67rem] md:tracking-[.04em]"
+								>{{ content.tagline }}</small
+							>
+						</span>
+					</a>
+
+					<button
+						class="text-[1.45rem] text-white md:hidden"
+						type="button"
+						@click="mobileMenu = !mobileMenu"
+						:aria-expanded="String(mobileMenu)"
+						aria-label="Toggle navigation"
+					>
+						<app-icon
+							:name="mobileMenu ? 'close' : 'menu'"
+							class="h-7 w-7"
+						></app-icon>
+					</button>
+
+					<div
+						class="absolute left-0 right-0 top-[74px] z-30 hidden flex-col gap-1 border-b border-[#334052] bg-[linear-gradient(110deg,#021528,#071d3d)] px-5 pb-6 pt-2 md:top-auto md:relative md:z-auto md:flex md:flex-row md:items-center md:gap-4 md:border-0 md:bg-transparent md:pb-0 md:pt-0 lg:gap-[23px]"
+						:class="{ '!flex': mobileMenu }"
+						@click="onNavClick"
+					>
+						<a
+							v-for="link in navLinks"
+							:key="link.href + link.label"
+							:href="link.href"
+							class="group relative py-2 text-[.85rem] font-normal text-white/80 transition hover:text-white md:text-[.7rem] lg:text-[.8rem]"
+							:class="{ 'font-bold text-white': link.active }"
+						>
+							<span
+								class="absolute -bottom-[9px] left-0 h-0.5 w-full origin-left scale-x-0 bg-gold transition group-hover:scale-x-100 md:-bottom-[23px]"
+								:class="{ 'scale-x-100': link.active }"
+							></span>
+							{{ link.label }}
+						</a>
+						<button
+							class="flex h-9 w-9 items-center justify-center self-start text-white transition hover:text-gold md:self-auto"
+							type="button"
+							@click="focusSearch"
+							aria-label="Search"
+						>
+							<app-icon
+								name="search"
+								class="h-[1.05rem] w-[1.05rem]"
+							></app-icon>
+						</button>
+						<a
+							class="mt-2 self-start rounded-md border border-gold px-3.5 py-2 text-[.75rem] text-white md:mt-0 md:self-auto"
+							href="#newsletter"
+							>Join InnoHub</a
+						>
+					</div>
+				</nav>
+			</header>
+
+			<main id="top">
+				<!-- ============================ HERO ============================ -->
+				<section
+					class="relative flex min-h-0 items-center bg-[url('assets/images/innohub-campus.png')] bg-cover bg-[center_53%] text-white md:min-h-[435px]"
+				>
+					<div class="hero-shade"></div>
+					<div
+						class="relative mx-auto grid w-full max-w-[1180px] grid-cols-1 gap-8 px-6 py-[30px] md:grid-cols-[minmax(0,1fr)_265px] md:gap-10 md:px-5 md:py-[31px] lg:grid-cols-[minmax(0,1fr)_275px] lg:gap-[75px] lg:pb-[72px] lg:pr-[70px] lg:pt-[31px]"
+					>
+						<div class="max-w-[600px] md:self-center">
+							<h1
+								class="my-0 text-[2.15rem] font-extrabold leading-[1.13] tracking-[-.022em] sm:text-[2.8rem] md:text-[2.65rem] lg:text-[3rem]"
+							>
+								{{ content.hero_heading }}<br /><span class="hero-title-accent"
+									>{{ content.hero_accent }}</span
+								>
+							</h1>
+							<p
+								class="mb-[19px] max-w-[540px] text-[.9rem] leading-[1.55] text-white/85 sm:text-[1rem]"
+							>
+								{{ content.hero_description }}
+							</p>
+
+							<form
+								class="flex h-12 max-w-[510px] items-center rounded-[28px] bg-white pl-2 text-ink shadow-[0_15px_35px_rgba(0,0,0,.18)]"
+								@submit.prevent="goToResults"
+								role="search"
+							>
+								<label class="sr-only" for="hero-search"
+									>Search the marketplace</label
+								>
+								<input
+									id="hero-search"
+									ref="searchInput"
+									v-model.trim="query"
+									type="search"
+									placeholder="Search innovations, technologies, services…"
+									aria-label="Search the marketplace"
+									class="min-w-0 flex-1 bg-transparent px-3 text-[.75rem] outline-none sm:text-[.84rem]"
+								/>
+								<button
+									class="mx-0 flex h-12 w-[61px] shrink-0 items-center justify-center rounded-[10px_26px_26px_10px] bg-gold text-[1.2rem] transition hover:bg-[#ffe175]"
+									type="submit"
+									aria-label="Show search results"
+								>
+									<app-icon name="search" class="h-5 w-5"></app-icon>
+								</button>
+							</form>
+
+							<div
+								class="mt-[15px] flex flex-wrap items-center gap-2 text-[.75rem]"
+								aria-label="Popular searches"
+							>
+								<span class="mr-1 text-[.7rem] font-bold text-white"
+									>Popular searches:</span
+								>
+								<button
+									v-for="(term, i) in popular"
+									:key="term"
+									type="button"
+									@click="searchFor(term)"
+									class="rounded-[5px] bg-white/10 px-2.5 py-[5px] text-[.65rem] text-white transition hover:bg-white/20"
+									:class="{ 'hidden sm:inline-block': i > 2 }"
+								>
+									{{ term }}
+								</button>
+							</div>
+						</div>
+
+						<aside
+							class="mt-6 max-w-[520px] self-stretch rounded-[10px] p-4 shadow-[0_7px_24px_rgba(0,0,0,.2)] md:mt-0 md:max-w-none md:self-center md:bg-[linear-gradient(155deg,rgba(11,46,99,.88),rgba(2,21,34,.91))]"
+							aria-labelledby="pathway-title"
+						>
+							<p
+								id="pathway-title"
+								class="mb-[11px] mt-0 text-[.94rem] font-bold"
+							>
+								I am looking for
+							</p>
+							<a
+								v-for="(path, i) in pathways"
+								:key="path.title"
+								:href="'#' + path.target"
+								class="grid grid-cols-[29px_1fr_10px] items-center gap-2.5 border-t border-white/[.13] py-2.5 text-white first-of-type:border-t-0"
+							>
+								<app-icon
+									:name="path.icon"
+									class="h-6 w-6"
+									:style="{ color: pathwayIconColors[i] }"
+								></app-icon>
+								<span>
+									<b class="block text-[.8rem] sm:text-[.9rem]"
+										>{{ path.title }}</b
+									>
+									<small
+										class="block text-[.65rem] leading-[1.4] text-white sm:text-[.76rem]"
+										>{{ path.description }}</small
+									>
+								</span>
+								<app-icon
+									name="chevron-right"
+									class="h-3 w-3 text-white/70"
+								></app-icon>
+							</a>
+						</aside>
+					</div>
+				</section>
+
+				<!-- ============================ METRICS ============================ -->
+				<section
+					class="metrics relative z-10 mx-auto -mt-8 grid max-w-[1180px] grid-cols-2 rounded-2xl bg-white p-3 shadow-panel sm:mx-5 sm:-mt-8 sm:max-w-[912px] sm:grid-cols-4 lg:max-w-[1115px] lg:-mt-[47px] lg:px-[15px] lg:py-5"
+					aria-label="Marketplace statistics"
+				>
+					<div
+						v-for="(metric, i) in metrics"
+						:key="metric.label"
+						class="flex items-center gap-3.5 sm:gap-[15px]"
+					>
+						<app-icon
+							:name="metric.icon"
+							class="h-7 w-7 shrink-0 sm:h-9 sm:w-9"
+							:style="{ color: metricIconColors[i] }"
+						></app-icon>
+						<span>
+							<strong
+								class="block text-[1.35rem] font-extrabold leading-none text-navy sm:text-[1.4rem] lg:text-[1.65rem]"
+								>{{ metric.value }}</strong
+							>
+							<small
+								class="mt-1 block text-[.67rem] leading-[1.35] text-[#161e2a] sm:text-[.7rem] lg:text-[.78rem]"
+								>{{ metric.label }}</small
+							>
+						</span>
+					</div>
+				</section>
+
+				<!-- ============================ INNOVATIONS ============================ -->
+				<section
+					id="innovations"
+					class="mx-auto max-w-[1180px] px-5 pb-[10px] pt-[30px] md:pb-[14px] md:pt-[29px]"
+				>
+					<div
+						class="mb-5 flex flex-wrap items-center justify-between gap-3 md:mb-5"
+					>
+						<div class="relative md:pl-[44px]">
+							<span
+								class="absolute left-[3px] top-[4px] h-1 w-[22px] bg-gold md:left-0"
+							></span>
+							<h2
+								class="mb-[7px] mt-0 text-[1.15rem] font-bold leading-[1.3] tracking-[-.02em] lg:text-[1.2rem]"
+							>
+								{{ content.featured_title }}
+							</h2>
+							<p class="m-0 text-[.8rem] text-[#444]">
+								{{ content.featured_description }}
+							</p>
+						</div>
+						<div class="flex items-center gap-3">
+							<span v-if="query || minTrl > 1" class="text-[.78rem] text-muted"
+								>{{ visibleCount }} matching results</span
+							>
+							<button type="button" class="outline-btn" @click="resetFilters">
+								View all innovations
+								<app-icon name="arrow-right" class="h-3.5 w-3.5"></app-icon>
+							</button>
+						</div>
+					</div>
+
+					<div
+						v-if="visibleCount === 0"
+						class="mb-[18px] rounded-[14px] border border-dashed border-[#bac7d8] p-10 text-center md:p-[50px]"
+					>
+						<app-icon
+							name="search"
+							class="mx-auto h-8 w-8 text-brandblue"
+						></app-icon>
+						<h3 class="mb-1 mt-2.5 text-[1.05rem] font-bold">
+							No matching innovations
+						</h3>
+						<p class="text-[.85rem] text-muted">
+							Try another keyword or lower the readiness level.
+						</p>
+						<button
+							type="button"
+							class="mt-4 rounded-lg bg-navy px-4 py-2.5 text-[.8rem] font-semibold text-white"
+							@click="resetFilters"
+						>
+							Reset filters
+						</button>
+					</div>
+
+					<div
+						class="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-4 md:grid-cols-5 md:gap-5"
+					>
+						<article
+							v-for="item in filteredInnovations"
+							:key="item.id"
+							class="flex min-w-0 flex-col overflow-hidden rounded-[9px] bg-white shadow-card transition duration-200 hover:-translate-y-[5px] hover:shadow-[0_16px_35px_rgba(10,35,73,.13)]"
+						>
+							<div
+								class="relative h-[230px] bg-cover bg-no-repeat sm:h-[200px] md:h-[140px] lg:h-[166px]"
+								:style="imageStyle(item)"
+							>
+								<span
+									class="absolute right-[10px] top-[14px] rounded-[99px] px-[13px] py-1 text-[.7rem] font-extrabold text-white shadow-[0_5px_15px_rgba(0,0,0,.18)]"
+									:style="{ background: trlBadgeColors[(item.id - 1) % trlBadgeColors.length] }"
+									>TRL {{ item.trl }}</span
+								>
+							</div>
+							<div class="flex-1 px-[15px] pb-[11px] pt-[13px]">
+								<a :href="'categories/' + item.sector"
+									><small class="text-[.62rem] font-normal text-brandblue"
+										>{{ item.category }}</small
+									></a
+								>
+								<h3
+									class="my-[5px] text-[.9rem] font-bold leading-[1.45] lg:text-[.9rem]"
+								>
+									{{ item.title }}
+								</h3>
+								<p class="m-0 text-[.74rem] leading-[1.55] text-muted">
+									{{ item.description }}
+								</p>
+							</div>
+							<div
+								class="flex items-center justify-between border-t border-[#edf0f4] px-[15px] py-[11px]"
+							>
+								<a
+									:href="'innovations/' + item.slug"
+									class="text-[.72rem] font-bold text-navy transition hover:text-brandblue"
+									>View Details</a
+								>
+								<button
+									class="px-0.5 text-navy transition hover:text-brandblue"
+									type="button"
+									@click="toggleSaved(item.id)"
+									:aria-label="isSaved(item.id) ? 'Remove from saved' : 'Save innovation'"
+								>
+									<app-icon
+										:name="isSaved(item.id) ? 'bookmark-fill' : 'bookmark'"
+										:filled="isSaved(item.id)"
+										class="h-[1.15rem] w-[1.15rem]"
+									></app-icon>
+								</button>
+							</div>
+						</article>
+					</div>
+				</section>
+
+				<!-- ============================ SECTORS ============================ -->
+				<section
+					id="sectors"
+					class="mx-auto max-w-[1180px] px-5 pb-5 pt-6 md:px-3 md:pb-5 md:pt-[18px]"
+				>
+					<div class="mb-3 flex items-center justify-between gap-4">
+						<h2
+							class="my-0 text-[1.15rem] font-bold leading-[1.3] tracking-[-.02em] lg:text-[1.2rem]"
+						>
+							<app-icon
+								name="globe"
+								class="mr-3 inline-block h-5 w-5 align-[-3px] text-[#15956e]"
+							></app-icon>
+							Explore by Sector
+						</h2>
+						<a class="outline-btn" href="#sectors"
+							>View All Sectors
+							<app-icon name="arrow-right" class="h-3.5 w-3.5"></app-icon
+						></a>
+					</div>
+					<div class="grid grid-cols-2 gap-3 sm:grid-cols-4 md:grid-cols-8">
+						<a
+							v-for="(sector, i) in sectors"
+							:key="sector.slug"
+							:href="'categories/' + sector.slug"
+							class="flex min-h-[122px] flex-col items-center justify-center gap-[13px] rounded-[10px] border border-white bg-white/[.85] px-[11px] pb-3 pt-[15px] text-center text-[#08172e] shadow-[0_4px_12px_rgba(18,50,74,.03)] transition hover:-translate-y-[3px] hover:border-[#089b95] hover:shadow-[0_5px_16px_rgba(24,56,92,.09)] md:min-h-[108px] md:px-2 lg:min-h-[122px] lg:px-[11px]"
+						>
+							<app-icon
+								:name="sector.icon"
+								class="h-8 w-8 lg:h-[2rem] lg:w-[2rem]"
+								:style="{ color: sectorIconColors[i] }"
+							></app-icon>
+							<span
+								class="text-[.75rem] leading-[1.5] md:text-[.67rem] lg:text-[.77rem]"
+								>{{ sector.name }}</span
+							>
+						</a>
+					</div>
+				</section>
+
+				<!-- ============================ TRL PANEL ============================ -->
+				<section class="mx-auto mt-2 max-w-[1180px] px-5 md:px-0">
+					<div
+						class="rounded-[10px] bg-[linear-gradient(100deg,#061d42,#04152f)] p-6 text-white shadow-[0_4px_12px_rgba(5,32,63,.06)] md:max-w-[936px] md:grid md:grid-cols-[260px_1fr] md:gap-[25px] md:p-[25px] lg:max-w-[1156px] lg:grid-cols-[285px_1fr] lg:gap-[38px] lg:px-8 lg:py-[25px]"
+					>
+						<div>
+							<span class="text-[.7rem] text-[#e1e6f2]"
+								>Find innovations by</span
+							>
+							<h2 class="mb-2 mt-[3px] text-[1rem] font-bold leading-[1.5]">
+								{{ content.trl_title }}
+							</h2>
+							<p class="text-[.7rem] text-[#d7deeb]">{{ content.trl_text }}</p>
+							<details class="group text-[.7rem]">
+								<summary
+									class="w-fit cursor-pointer list-none rounded-[5px] border border-[#ae9039] px-[13px] py-2 text-white"
+								>
+									Learn more about TRL
+									<app-icon
+										name="help"
+										class="ml-1 inline-block h-3.5 w-3.5 align-[-2px]"
+									></app-icon>
+								</summary>
+								<p class="mb-0 mt-2.5">{{ content.trl_help }}</p>
+							</details>
+						</div>
+						<div class="min-w-0">
+							<div class="trl-stages">
+								<div
+									v-for="(label, i) in trlStages"
+									:key="label"
+									class="trl-stage"
+									:class="{ ready: i + 1 >= minTrl }"
+								>
+									<b>{{ i + 1 }}</b><small>{{ label }}</small>
+								</div>
+							</div>
+							<input
+								v-model.number="minTrl"
+								type="range"
+								min="1"
+								max="9"
+								step="1"
+								aria-label="Minimum technology readiness level"
+								class="accent-trl mt-5 block w-full"
+							/>
+							<p class="mb-0 mt-0.5 text-center text-[.68rem] text-white/70">
+								Showing innovations from
+								<b class="text-[#13bbad]">TRL {{ minTrl }}</b> and above
+							</p>
+						</div>
+					</div>
+				</section>
+
+				<!-- ============================ LOWER GRID ============================ -->
+				<section
+					id="services"
+					class="mx-auto grid max-w-[1180px] grid-cols-1 gap-4 px-5 pb-6 pt-5 md:grid-cols-[1.1fr_1.08fr_.95fr] md:gap-[18px] md:px-5 md:py-5"
+				>
+					<article
+						class="min-h-0 rounded-[10px] bg-white p-6 shadow-[0_8px_25px_rgba(6,30,64,.06)] md:min-h-[265px] md:p-[18px] lg:p-5"
+					>
+						<div class="flex flex-wrap items-start justify-between gap-2">
+							<div>
+								<h2
+									class="mb-1 mt-0 text-[1.3rem] font-extrabold tracking-[-.03em] md:text-[1.08rem] lg:text-[1.2rem]"
+								>
+									{{ content.services_title }}
+								</h2>
+								<p class="m-0 text-[.73rem] text-[#536073]">
+									{{ content.services_description }}
+								</p>
+							</div>
+							<a
+								class="text-[.75rem] font-bold text-brandblue transition hover:text-navy"
+								href="#collaborate"
+								>View All</a
+							>
+						</div>
+						<ul class="m-0 list-none p-0 pt-3">
+							<li
+								v-for="(service, i) in services"
+								:key="service.label"
+								class="grid grid-cols-[26px_1fr_16px] items-center gap-2 border-t border-line py-2.5 text-[.88rem] md:text-[.71rem]"
+							>
+								<app-icon
+									:name="service.icon"
+									class="h-4 w-4 text-brandblue"
+								></app-icon>
+								{{ service.label }}
+								<app-icon
+									name="chevron-right"
+									class="h-3 w-3 text-[#9ba7b8]"
+								></app-icon>
+							</li>
+						</ul>
+					</article>
+
+					<article
+						class="min-h-0 rounded-[10px] bg-white p-6 shadow-[0_8px_25px_rgba(6,30,64,.06)] md:min-h-[265px] md:p-[18px] lg:p-5"
+					>
+						<h2
+							class="mb-1 mt-0 text-[1.3rem] font-extrabold tracking-[-.03em] md:text-[1.08rem] lg:text-[1.2rem]"
+						>
+							{{ content.story_title }}
+						</h2>
+						<p class="m-0 text-[.73rem] text-[#536073]">
+							{{ content.story_subtitle }}
+						</p>
+						<blockquote
+							class="my-3 rounded-[4px_10px_10px_4px] bg-[linear-gradient(110deg,#f3f7fa,#e8eff5)] p-4 text-[1rem] leading-[1.5] text-[#48566c] md:text-[.78rem]"
+						>
+							{{ content.story_text }}
+						</blockquote>
+						<div class="grid grid-cols-3 gap-2">
+							<span
+								v-for="stat in storyStats"
+								:key="stat.label"
+								class="border-r border-line pl-1.5 text-[.72rem] text-muted last:border-0"
+							>
+								<b class="block text-[1.3rem] text-navy">{{ stat.value }}</b>{{
+								stat.label }}
+							</span>
+						</div>
+					</article>
+
+					<article
+						id="collaborate"
+						class="relative min-h-0 overflow-hidden rounded-[10px] bg-[radial-gradient(at_top_right,#06b2a8,transparent_60%),linear-gradient(145deg,#082652,#075e71)] p-6 text-white shadow-[0_8px_25px_rgba(6,30,64,.06)] md:min-h-[265px] md:p-[18px] lg:p-5"
+					>
+						<h2
+							class="relative z-10 mb-2 mt-0 max-w-[280px] text-[1.3rem] font-extrabold leading-[1.08] tracking-[-.03em] md:text-[1.08rem] lg:text-[1.2rem]"
+						>
+							{{ content.collaborate_title }}
+						</h2>
+						<p class="relative z-10 max-w-[285px] text-[.78rem] text-white/70">
+							{{ content.collaborate_text }}
+						</p>
+						<a
+							:href="'mailto:' + content.contact_email"
+							class="relative z-10 mt-4 inline-flex items-center gap-3 rounded-full bg-gold px-4 py-2.5 text-[.78rem] font-extrabold text-navy transition hover:bg-[#ffd76a]"
+						>
+							{{ content.contact_label }}
+							<app-icon name="chevron-right" class="h-3 w-3"></app-icon>
+						</a>
+						<p class="relative z-10 mb-0 mt-3 text-[.7rem] text-white/60">
+							{{ content.partner_caption }}
+							<app-icon
+								name="arrow-right"
+								class="inline-block h-3 w-3 align-[-1px]"
+							></app-icon>
+						</p>
+						<app-icon
+							name="users"
+							class="pointer-events-none absolute -bottom-8 -right-6 h-40 w-40 text-white/[.07]"
+						></app-icon>
+					</article>
+				</section>
+
+				<!-- ============================ NEWSLETTER ============================ -->
+				<section
+					id="newsletter"
+					class="bg-[linear-gradient(90deg,#124b91,#1b5bc5_58%,#0ca88e)] py-[19px] text-white"
+				>
+					<div
+						class="mx-auto flex max-w-[1180px] flex-col items-start justify-between gap-4 px-5 sm:flex-row sm:items-center sm:gap-[35px]"
+					>
+						<div class="flex items-center gap-4">
+							<span
+								class="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-white/15"
+							>
+								<app-icon name="mail" class="h-5 w-5"></app-icon>
+							</span>
+							<span>
+								<b class="block text-[1rem]">{{ content.newsletter_title }}</b>
+								<small
+									class="mt-0.5 block text-[.72rem] text-white/75 sm:text-[.73rem]"
+									>{{ content.newsletter_text }}</small
+								>
+							</span>
+						</div>
+						<form
+							class="flex w-full flex-row rounded-[9px] bg-white p-1 sm:w-[470px]"
+							@submit.prevent="subscribe"
+						>
+							<label class="sr-only" for="email">Email address</label>
+							<input
+								id="email"
+								v-model.trim="email"
+								type="email"
+								placeholder="Enter your email address"
+								required
+								class="min-w-0 flex-1 bg-transparent px-3 text-[.75rem] text-ink outline-none sm:text-[.85rem]"
+							/>
+							<button
+								type="submit"
+								:disabled="submitting"
+								class="shrink-0 whitespace-nowrap rounded-[7px] bg-gold px-3.5 py-2.5 text-[.76rem] font-extrabold text-navy transition hover:bg-[#ffe175] disabled:cursor-not-allowed disabled:opacity-60"
+							>
+								<span v-if="submitting">Joining…</span
+								><span v-else>{{ content.newsletter_button }}</span>
+							</button>
+						</form>
+					</div>
+					<p
+						v-if="notice"
+						role="status"
+						class="mx-auto mb-0 mt-2 max-w-[1180px] px-5 text-center text-[.78rem]"
+						:class="noticeError ? 'text-[#ffe0e0]' : 'text-white'"
+					>
+						{{ notice }}
+					</p>
+				</section>
+			</main>
+
+			<!-- ============================ FOOTER ============================ -->
+			<footer id="about" class="bg-[#04152f] py-11 text-white">
+				<div
+					class="mx-auto grid max-w-[1180px] grid-cols-2 gap-6 px-5 sm:grid-cols-4 sm:gap-[25px] lg:grid-cols-[1.5fr_1fr_1fr_1.25fr] lg:gap-[50px]"
+				>
+					<div>
+						<a class="mb-4 flex items-center gap-3 text-white" href="./">
+							<span class="brand-mark"><i></i><i></i><i></i></span>
+							<span>
+								<strong
+									class="block text-[1.35rem] font-extrabold leading-none tracking-[-.035em] md:text-[1.65rem]"
+									>{{ content.brand }}</strong
+								>
+								<small
+									class="mt-[5px] block text-[.6rem] tracking-[.14em] text-gold md:text-[.67rem] md:tracking-[.04em]"
+									>{{ content.footer_tagline }}</small
+								>
+							</span>
+						</a>
+						<p class="max-w-[250px] text-[.78rem] text-[#8190a9]">
+							{{ content.footer_text }}
+						</p>
+					</div>
+					<div class="flex flex-col gap-2">
+						<b class="mb-1 text-[.8rem] text-[#dce7f9]">Explore</b>
+						<a
+							class="text-[.78rem] text-[#8190a9] transition hover:text-white"
+							href="#innovations"
+							>Innovations</a
+						>
+						<a
+							class="text-[.78rem] text-[#8190a9] transition hover:text-white"
+							href="#sectors"
+							>Sectors</a
+						>
+						<a
+							class="text-[.78rem] text-[#8190a9] transition hover:text-white"
+							href="#services"
+							>Services &amp; facilities</a
+						>
+					</div>
+					<div class="flex flex-col gap-2">
+						<b class="mb-1 text-[.8rem] text-[#dce7f9]">Connect</b>
+						<a
+							class="text-[.78rem] text-[#8190a9] transition hover:text-white"
+							href="#collaborate"
+							>Collaborate</a
+						>
+						<a
+							class="text-[.78rem] text-[#8190a9] transition hover:text-white"
+							:href="'mailto:' + content.contact_email"
+							>Contact us</a
+						>
+						<a
+							class="text-[.78rem] text-[#8190a9] transition hover:text-white"
+							href="#newsletter"
+							>Newsletter</a
+						>
+						<a
+							class="text-[.78rem] text-[#8190a9] transition hover:text-white"
+							href="admin"
+							>Admin login</a
+						>
+					</div>
+					<div>
+						<b class="mb-3 block text-[.8rem] text-[#dce7f9]"
+							>Follow {{ content.brand }}</b
+						>
+						<div class="mb-4 flex gap-2">
+							<a
+								v-for="s in socials"
+								:key="s.key"
+								:href="s.url"
+								:aria-label="s.label"
+								rel="noopener noreferrer"
+								class="grid h-8 w-8 place-items-center rounded-full bg-[#123761] text-white transition hover:bg-brandblue"
+							>
+								<app-icon :name="s.icon" class="h-4 w-4"></app-icon>
+							</a>
+						</div>
+						<small class="text-[.7rem] text-[#6d7c94]"
+							>© {{ year }} {{ content.brand }}. All rights reserved.</small
+						>
+					</div>
+				</div>
+			</footer>
+		</div>
+
+		<script>
+			(function () {
+				"use strict";
+
+				/* ------------------------------------------------------------------ *
+				 * Content — ported verbatim from App\Libraries\SiteContent + Catalog *
+				 * ------------------------------------------------------------------ */
+				var DATA = {
+					subscribeUrl: "newsletter/subscribe",
+					popular: ["Halal", "Enzyme", "AI", "Agriculture", "Medical"],
+					content: {
+						brand: "InnoHub",
+						tagline: "INNOVATION MARKETPLACE",
+						meta_description:
+							"InnoHub connects research-led innovations with industry, investors, government and communities.",
+						hero_heading: "Innovating for",
+						hero_accent: "Faith. People. Future.",
+						hero_description:
+							"Discover research-driven innovations and expert solutions to empower industry and society.",
+						popular: "Halal, Enzyme, AI, Agriculture, Medical",
+						featured_title: "Featured Innovations",
+						featured_description:
+							"Cutting-edge technologies by our researchers",
+						services_title: "Services & Facilities",
+						services_description: "Leverage our expertise, labs and equipment",
+						service_1: "Research & development",
+						service_2: "Testing & analysis",
+						service_3: "Prototyping & fabrication",
+						service_4: "Consultancy & training",
+						story_title: "Success Stories",
+						story_subtitle: "Real impact through collaboration",
+						story_text:
+							"Connecting research expertise with industry challenges, from the first prototype to real-world applications.",
+						story_value_1: "35+",
+						story_label_1: "Technologies licensed",
+						story_value_2: "25+",
+						story_label_2: "Industry partners",
+						story_value_3: "RM 15M+",
+						story_label_3: "Economic impact",
+						collaborate_title: "Ready to Collaborate with InnoHub?",
+						collaborate_text:
+							"Let’s turn innovative ideas into real-world impact together.",
+						contact_label: "Get in Touch",
+						contact_email: "hello@innohub.test",
+						partner_caption: "Partnership Opportunities",
+						newsletter_title: "Stay close to what’s next",
+						newsletter_text:
+							"New technologies, partnerships and events—once a month.",
+						newsletter_button: "Join the list",
+						footer_tagline: "IDEAS. PARTNERS. IMPACT.",
+						footer_text:
+							"A meeting place for research, industry and communities.",
+						trl_title: "Technology Readiness Level (TRL)",
+						trl_text: "From early research to market-ready solutions.",
+						trl_help:
+							"TRL describes technology maturity: 1–3 is early research, 4–6 is validation and demonstration, and 7–9 progresses towards operational use.",
+					},
+					metrics: [
+						{
+							icon: "rocket",
+							value: "120+",
+							label: "Innovations ready for impact",
+						},
+						{
+							icon: "users",
+							value: "80+",
+							label: "Expert researchers across disciplines",
+						},
+						{
+							icon: "building",
+							value: "60+",
+							label: "Industry & community partners",
+						},
+						{
+							icon: "chart",
+							value: "35+",
+							label: "Technologies licensed & commercialised",
+						},
+					],
+					pathways: [
+						{
+							icon: "briefcase",
+							title: "Industry Partner",
+							description: "Find solutions for your business",
+							target: "innovations",
+						},
+						{
+							icon: "trend",
+							title: "Investor",
+							description: "Explore technologies to invest in",
+							target: "innovations",
+						},
+						{
+							icon: "bank",
+							title: "Government",
+							description: "Solutions for the public sector",
+							target: "services",
+						},
+						{
+							icon: "flask",
+							title: "Cluster / SIG / RG",
+							description: "Collaborate on R&D",
+							target: "collaborate",
+						},
+						{
+							icon: "users",
+							title: "Community",
+							description: "Innovations for society",
+							target: "collaborate",
+						},
+					],
+					sectors: [
+						{
+							slug: "health-medical-sciences",
+							icon: "heart",
+							name: "Health & Medical Sciences",
+						},
+						{
+							slug: "halal-islamic-economy",
+							icon: "moon",
+							name: "Halal & Islamic Economy",
+						},
+						{
+							slug: "agriculture-food-security",
+							icon: "flower",
+							name: "Agriculture & Food Security",
+						},
+						{
+							slug: "engineering-advanced-materials",
+							icon: "gear",
+							name: "Engineering & Advanced Materials",
+						},
+						{
+							slug: "ai-data-digital-solutions",
+							icon: "cpu",
+							name: "AI, Data & Digital Solutions",
+						},
+						{
+							slug: "environment-sustainability",
+							icon: "tree",
+							name: "Environment & Sustainability",
+						},
+						{
+							slug: "education-social-innovation",
+							icon: "cap",
+							name: "Education & Social Innovation",
+						},
+						{
+							slug: "islamic-civilization-heritage",
+							icon: "sun",
+							name: "Islamic Civilization & Heritage",
+						},
+					],
+					innovations: [
+						{
+							id: 1,
+							slug: "i-wound-hydrogel",
+							sector: "health-medical-sciences",
+							category: "Medical Device",
+							title: "i-Wound™ Hydrogel Smart Dressing",
+							description:
+								"Intelligent wound dressing with antimicrobial and real-time monitoring capability.",
+							trl: 7,
+							imagePosition: "0%",
+							image: null,
+						},
+						{
+							id: 2,
+							slug: "unizymes-halal-enzyme",
+							sector: "halal-islamic-economy",
+							category: "Halal & Nutraceutical",
+							title: "UniZYMES™ Halal Enzyme Blend",
+							description:
+								"Halal-certified multi-enzyme formulation for improved digestion and gut health.",
+							trl: 8,
+							imagePosition: "25%",
+							image: null,
+						},
+						{
+							id: 3,
+							slug: "agrisza-smart-monitoring",
+							sector: "agriculture-food-security",
+							category: "Smart Agriculture",
+							title: "AgriSZA™ IoT Smart Monitoring System",
+							description:
+								"Real-time monitoring of soil, weather and crop health to optimise yield.",
+							trl: 6,
+							imagePosition: "50%",
+							image: null,
+						},
+						{
+							id: 4,
+							slug: "portable-falak-observation",
+							sector: "islamic-civilization-heritage",
+							category: "Falak & Astronomy",
+							title: "Portable Falak Observation System",
+							description:
+								"A compact observation platform for astronomical research and education.",
+							trl: 5,
+							imagePosition: "75%",
+							image: null,
+						},
+						{
+							id: 5,
+							slug: "ai-sza-sustainability",
+							sector: "ai-data-digital-solutions",
+							category: "AI & Data Science",
+							title: "AI-SZA™ Sustainability Analytics Platform",
+							description:
+								"AI-powered ESG assessment and sustainability decision support.",
+							trl: 6,
+							imagePosition: "100%",
+							image: null,
+						},
+					],
+					trlStages: [
+						"Basic Research",
+						"Concept Formulation",
+						"Proof of Concept",
+						"Lab Validation",
+						"Prototype Validation",
+						"Prototype Demonstration",
+						"System Prototype",
+						"System Complete",
+						"Market Ready",
+					],
+					services: [
+						{ icon: "flask", label: "Research & development" },
+						{ icon: "clipboard", label: "Testing & analysis" },
+						{ icon: "tools", label: "Prototyping & fabrication" },
+						{ icon: "chat", label: "Consultancy & training" },
+					],
+				};
+
+				/* Accent palettes carried over from assets/css/reference.css */
+				var PATHWAY_ICON_COLORS = [
+					"#ffc928",
+					"#5ddd69",
+					"#4cd3e7",
+					"#cf7aff",
+					"#e65295",
+				];
+				var METRIC_ICON_COLORS = ["#315fde", "#ffc928", "#20a9bd", "#754ce3"];
+				var SECTOR_ICON_COLORS = [
+					"#188e71",
+					"#554087",
+					"#188e71",
+					"#315a92",
+					"#315a92",
+					"#554087",
+					"#188e71",
+					"#ad873e",
+				];
+				var TRL_BADGE_COLORS = [
+					"#0b9e65",
+					"#0b9e65",
+					"#0b9e65",
+					"#6254d9",
+					"#079cc0",
+				];
+
+				var NAV_LINKS = [
+					{ label: "Home", href: "./", active: true },
+					{ label: "Innovations", href: "#innovations" },
+					{ label: "Services & Facilities", href: "#services" },
+					{ label: "Sectors", href: "#sectors" },
+					{ label: "Collaborate", href: "#collaborate" },
+					{ label: "About Us", href: "#about" },
+				];
+
+				/* ------------------------------------------------------------------ *
+				 * Icons — hand-rolled inline SVG, replacing Bootstrap Icons           *
+				 * ------------------------------------------------------------------ */
+				var STROKE =
+					'fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"';
+				var ICONS = {
+					search: '<circle cx="11" cy="11" r="7"/><path d="M20.5 20.5 16 16"/>',
+					menu: '<path d="M4 7h16M4 12h16M4 17h16"/>',
+					close: '<path d="M6 6l12 12M18 6 6 18"/>',
+					"chevron-right": '<path d="M9 5l7 7-7 7"/>',
+					"arrow-right": '<path d="M4 12h15M13 6l6 6-6 6"/>',
+					bookmark:
+						'<path d="M7 4.5A1.5 1.5 0 0 1 8.5 3h7A1.5 1.5 0 0 1 17 4.5V21l-5-4-5 4z"/>',
+					"bookmark-fill":
+						'<path d="M7 4.5A1.5 1.5 0 0 1 8.5 3h7A1.5 1.5 0 0 1 17 4.5V21l-5-4-5 4z"/>',
+					globe:
+						'<circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.4 2.6 3.6 5.4 3.6 8.5s-1.2 5.9-3.6 8.5c-2.4-2.6-3.6-5.4-3.6-8.5S9.6 6.1 12 3.5z"/>',
+					rocket:
+						'<path d="M12 3c2.9 2.2 4.4 5.4 4.4 9.1L15 15H9l-1.4-2.9C7.6 8.4 9.1 5.2 12 3z"/><circle cx="12" cy="9.8" r="1.7"/><path d="M9 15.2 6.6 20l2.6-1.1M15 15.2 17.4 20l-2.6-1.1M10.4 18.2h3.2"/>',
+					users:
+						'<circle cx="9" cy="8" r="3.2"/><path d="M3.4 19.2a5.6 5.6 0 0 1 11.2 0"/><path d="M16 5.2a3.2 3.2 0 0 1 0 5.9M17.2 14.2a5.6 5.6 0 0 1 3.4 5"/>',
+					building:
+						'<path d="M4 20.5V5a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v15.5"/><path d="M14 10.5h5a1 1 0 0 1 1 1v9"/><path d="M2.5 20.5h19"/><path d="M7 8h3M7 11.5h3M7 15h3"/>',
+					chart:
+						'<path d="M3.5 3.5v17h17"/><path d="M7.5 17v-4M12 17V8M16.5 17v-6.5"/>',
+					briefcase:
+						'<rect x="2.5" y="7" width="19" height="12.5" rx="2"/><path d="M8.5 7V5.6A1.6 1.6 0 0 1 10.1 4h3.8a1.6 1.6 0 0 1 1.6 1.6V7"/><path d="M2.5 12.3h19"/>',
+					trend: '<path d="M3 17.5l6-6 4 4 8-8"/><path d="M15.5 7.5H21V13"/>',
+					bank: '<path d="M3 9.5 12 4.2l9 5.3"/><path d="M4.8 9.5V19M9.6 9.5V19M14.4 9.5V19M19.2 9.5V19"/><path d="M2.5 21h19"/>',
+					flask:
+						'<path d="M9.5 3h5M10.5 3v6.2L5.2 18.6A1.6 1.6 0 0 0 6.6 21h10.8a1.6 1.6 0 0 0 1.4-2.4L13.5 9.2V3"/><path d="M7.4 15.4h9.2"/>',
+					heart:
+						'<path d="M12 20.3S3.8 15.4 3.8 10.2A4.6 4.6 0 0 1 12 7.4a4.6 4.6 0 0 1 8.2 2.8c0 5.2-8.2 10.1-8.2 10.1z"/><path d="M3.9 12.7h3.4l1.5-2.5 2.2 4.4 1.5-2.5h4.3"/>',
+					moon: '<path d="M20.3 14.6A8.6 8.6 0 0 1 9.4 3.7a8.6 8.6 0 1 0 10.9 10.9z"/><path d="m17 3.5.7 1.8 1.8.7-1.8.7-.7 1.8-.7-1.8-1.8-.7 1.8-.7z"/>',
+					flower:
+						'<circle cx="12" cy="12" r="2.3"/><ellipse cx="12" cy="6.6" rx="2.5" ry="3.2"/><ellipse cx="12" cy="17.4" rx="2.5" ry="3.2"/><ellipse cx="6.6" cy="12" rx="3.2" ry="2.5"/><ellipse cx="17.4" cy="12" rx="3.2" ry="2.5"/>',
+					gear: '<circle cx="12" cy="12" r="3.2"/><path d="M12 2.8v3.1M12 18.1v3.1M2.8 12h3.1M18.1 12h3.1M5.4 5.4 7.6 7.6M16.4 16.4l2.2 2.2M18.6 5.4l-2.2 2.2M7.6 16.4l-2.2 2.2"/>',
+					cpu: '<rect x="6.5" y="6.5" width="11" height="11" rx="1.6"/><rect x="9.6" y="9.6" width="4.8" height="4.8" rx=".6"/><path d="M9.5 2.8v3.7M14.5 2.8v3.7M9.5 17.5v3.7M14.5 17.5v3.7M2.8 9.5h3.7M2.8 14.5h3.7M17.5 9.5h3.7M17.5 14.5h3.7"/>',
+					tree: '<path d="M12 3.2 17.6 10h-3.1l3.2 4.2H6.3L9.5 10H6.4z"/><path d="M12 14.2V21M9 18.2h6"/>',
+					cap: '<path d="M12 4 2.6 8.4 12 12.8l9.4-4.4z"/><path d="M6.6 10.6v5.2c0 1.5 2.4 2.9 5.4 2.9s5.4-1.4 5.4-2.9v-5.2"/><path d="M21.4 8.4v5.4"/>',
+					sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2.4v2.4M12 19.2v2.4M2.4 12h2.4M19.2 12h2.4M5.2 5.2l1.7 1.7M17.1 17.1l1.7 1.7M18.8 5.2l-1.7 1.7M6.9 17.1l-1.7 1.7"/>',
+					clipboard:
+						'<path d="M9 4.6H6.5A1.5 1.5 0 0 0 5 6.1v13.4A1.5 1.5 0 0 0 6.5 21h11a1.5 1.5 0 0 0 1.5-1.5V6.1a1.5 1.5 0 0 0-1.5-1.5H15"/><rect x="9" y="2.8" width="6" height="3.6" rx="1.2"/><path d="M8.4 12.6h2l1.3-2.5 1.8 4.2 1.3-2.5h1.9"/>',
+					tools:
+						'<path d="M14.7 3.4a5 5 0 0 0-6.5 6.6L3 15.2V20.6h5.4l5.2-5.2a5 5 0 0 0 6.6-6.5l-3 3-2.6-.6-.6-2.6z"/>',
+					chat: '<path d="M4 4.6h16v10.8H9.4L4.6 19.8V4.6z"/><path d="M8 8.6h8M8 12h5"/>',
+					mail: '<rect x="2.6" y="5" width="18.8" height="14" rx="2"/><path d="M3.2 6.6 12 13.2l8.8-6.6"/>',
+					help: '<circle cx="12" cy="12" r="8.5"/><path d="M9.4 9.5a2.7 2.7 0 0 1 5.2 1c0 1.8-2.6 2.1-2.6 3.8"/><path d="M12 17.4h.01"/>',
+					linkedin:
+						'<rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 10.4V16M8 7.6h.01"/><path d="M11.6 16v-5.6M11.6 13.2a2.3 2.3 0 0 1 4.6 0V16"/>',
+					instagram:
+						'<rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="3.9"/><path d="M17.2 6.8h.01"/>',
+					youtube:
+						'<rect x="2.5" y="5.5" width="19" height="13" rx="3.6"/><path d="m10.4 9.4 5 2.6-5 2.6z"/>',
+				};
+
+				var app = Vue.createApp({
+					data: function () {
+						return {
+							content: DATA.content,
+							metrics: DATA.metrics,
+							pathways: DATA.pathways,
+							sectors: DATA.sectors,
+							services: DATA.services,
+							trlStages: DATA.trlStages,
+							popular: DATA.popular,
+							pathwayIconColors: PATHWAY_ICON_COLORS,
+							metricIconColors: METRIC_ICON_COLORS,
+							sectorIconColors: SECTOR_ICON_COLORS,
+							trlBadgeColors: TRL_BADGE_COLORS,
+							navLinks: NAV_LINKS,
+							year: new Date().getFullYear(),
+							query: "",
+							minTrl: 1,
+							saved: [],
+							email: "",
+							notice: "",
+							noticeError: false,
+							submitting: false,
+							mobileMenu: false,
+						};
+					},
+					computed: {
+						storyStats: function () {
+							return [1, 2, 3].map(function (i) {
+								return {
+									value: this.content["story_value_" + i],
+									label: this.content["story_label_" + i],
+								};
+							}, this);
+						},
+						socials: function () {
+							return ["linkedin", "instagram", "youtube"]
+								.filter(function (key) {
+									return !!this.content[key];
+								}, this)
+								.map(function (key) {
+									return {
+										key: key,
+										url: this.content[key],
+										icon: key,
+										label: key[0].toUpperCase() + key.slice(1),
+									};
+								}, this);
+						},
+						filteredInnovations: function () {
+							var self = this;
+							return DATA.innovations.filter(function (item) {
+								return self.matches(item, self.query, self.minTrl);
+							});
+						},
+						visibleCount: function () {
+							return this.filteredInnovations.length;
+						},
+					},
+					mounted: function () {
+						try {
+							var stored = JSON.parse(
+								localStorage.getItem("innohub-saved") || "[]",
+							);
+							this.saved = Array.isArray(stored) ? stored : [];
+						} catch (err) {
+							this.saved = [];
+						}
+					},
+					methods: {
+						/* Same predicate as the original: TRL floor + case-insensitive substring. */
+						matches: function (item, query, minTrl) {
+							if (Number(item.trl) < Number(minTrl)) return false;
+							if (!query) return true;
+							return (
+								(item.title + " " + item.category + " " + item.description)
+									.toLowerCase()
+									.indexOf(query.toLowerCase()) !== -1
+							);
+						},
+						imageStyle: function (item) {
+							return {
+								backgroundImage: item.image
+									? "url('" + item.image + "')"
+									: "url('assets/images/innovation-strip.png')",
+								backgroundSize: "500% 100%",
+								backgroundPosition: (item.imagePosition || "0%") + " center",
+							};
+						},
+						/* Tapping any link inside the nav panel dismisses it on small screens. */
+						onNavClick: function (event) {
+							if (event.target.closest("a")) this.mobileMenu = false;
+						},
+						focusSearch: function () {
+							this.mobileMenu = false;
+							this.$nextTick(function () {
+								var el = document.getElementById("hero-search");
+								if (el) el.focus();
+							});
+						},
+						goToResults: function () {
+							var target = document.getElementById("innovations");
+							if (target)
+								target.scrollIntoView({ behavior: "smooth", block: "start" });
+						},
+						searchFor: function (term) {
+							this.query = term;
+							this.mobileMenu = false;
+							this.$nextTick(this.goToResults);
+						},
+						resetFilters: function () {
+							this.query = "";
+							this.minTrl = 1;
+						},
+						toggleSaved: function (id) {
+							this.saved =
+								this.saved.indexOf(id) !== -1
+									? this.saved.filter(function (item) {
+											return item !== id;
+										})
+									: this.saved.concat([id]);
+							try {
+								localStorage.setItem(
+									"innohub-saved",
+									JSON.stringify(this.saved),
+								);
+							} catch (err) {
+								/* Saving still works for this visit. */
+							}
+						},
+						isSaved: function (id) {
+							return this.saved.indexOf(id) !== -1;
+						},
+						subscribe: function () {
+							this.submitting = true;
+							this.notice = "";
+							this.noticeError = false;
+							var self = this;
+							fetch(DATA.subscribeUrl, {
+								method: "POST",
+								headers: {
+									"Content-Type": "application/x-www-form-urlencoded",
+								},
+								body: new URLSearchParams({ email: this.email }),
+							})
+								.then(function (response) {
+									return response.json().then(function (payload) {
+										return { ok: response.ok, payload: payload };
+									});
+								})
+								.then(function (result) {
+									self.notice = result.payload && result.payload.message;
+									self.noticeError = !result.ok;
+									if (result.ok) self.email = "";
+								})
+								.catch(function () {
+									self.notice =
+										"We could not add you just now. Please try again.";
+									self.noticeError = true;
+								})
+								.then(function () {
+									self.submitting = false;
+								});
+						},
+					},
+				});
+
+				app.component("app-icon", {
+					props: {
+						name: { type: String, required: true },
+						filled: { type: Boolean, default: false },
+					},
+					computed: {
+						markup: function () {
+							return ICONS[this.name] || "";
+						},
+						paint: function () {
+							return this.filled
+								? { fill: "currentColor", stroke: "none" }
+								: {
+										fill: "none",
+										stroke: "currentColor",
+										"stroke-width": "1.7",
+										"stroke-linecap": "round",
+										"stroke-linejoin": "round",
+									};
+						},
+					},
+					template:
+						'<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" ' +
+						'class="inline-block shrink-0 align-[-2px]" v-bind="paint" v-html="markup"></svg>',
+				});
+
+				app.mount("#app");
+			})();
+		</script>
+	</body>
+</html>
