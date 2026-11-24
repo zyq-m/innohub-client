@@ -3,17 +3,16 @@
 	import {
 		ArrowLeft,
 		ArrowRight,
-		Bookmark,
 		Cpu,
 		Download,
 		FileText,
+		Mail,
 		Play,
 		Search,
 	} from "lucide-vue-next";
 	import { computed, ref, watch } from "vue";
 	import { useRoute, useRouter } from "vue-router";
 	import ImageCarousel from "../components/ImageCarousel.vue";
-	import { useMarketplace } from "../composables/useMarketplace";
 	import { useProducts } from "../composables/useProducts";
 	import type { Product } from "../data/products";
 	import { trlStages } from "../data/site";
@@ -23,7 +22,6 @@
 	const route = useRoute();
 	const router = useRouter();
 	const { state } = useProducts();
-	const { isSaved, toggleSaved } = useMarketplace();
 
 	const product = ref<Product | null>(null);
 	const loading = ref(true);
@@ -108,6 +106,20 @@
 		if (trl <= 3) return "#079cc0";
 		if (trl <= 6) return "#315fde";
 		return "#0b9e65";
+	});
+
+	const researcherEmail = computed(() =>
+		(
+			product.value?.researcherEmail ||
+			listed.value?.researcherEmail ||
+			""
+		).trim(),
+	);
+	const contactHref = computed(() => {
+		if (!researcherEmail.value) return "";
+		const subject = `Enquiry about ${product.value?.title ?? "an innovation"}`;
+		const body = `Dear ${product.value?.researcher || "Researcher"},\n\nI am interested in learning more about "${product.value?.title ?? ""}" listed on InnoHub.\n\nKind regards,\n`;
+		return `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(researcherEmail.value)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 	});
 
 	function isTrlActive(level: number): boolean {
@@ -424,16 +436,25 @@
 					</section>
 
 					<div class="space-y-2.5">
-						<button
-							type="button"
+						<a
+							v-if="contactHref"
+							:href="contactHref"
+							target="_blank"
+							rel="noopener noreferrer"
 							class="outline-btn w-full justify-center"
-							@click="toggleSaved(product.id)"
 						>
-							<Bookmark
-								:fill="isSaved(product.id) ? 'currentColor' : 'none'"
-								class="h-4 w-4"
-							/>
-							{{ isSaved(product.id) ? "Saved" : "Save innovation" }}
+							<Mail class="h-4 w-4" />
+							Contact researcher
+						</a>
+						<button
+							v-else
+							type="button"
+							class="outline-btn w-full cursor-not-allowed justify-center opacity-60"
+							disabled
+							title="Researcher email is not available"
+						>
+							<Mail class="h-4 w-4" />
+							Contact researcher
 						</button>
 						<RouterLink
 							to="/contact"

@@ -38,6 +38,7 @@ export interface RawProduct {
 	c120ctajukproduk: string | null;
 	a017namaper?: string | null;
 	a017noper?: string | null;
+	a017emel?: string | null;
 	a019singkatan?: string | null;
 }
 
@@ -52,6 +53,7 @@ export interface Product {
 	typeLabel: string;
 	researcher: string;
 	researcherNo: string;
+	researcherEmail: string;
 	facultyCode: string;
 	trl: number | null;
 	spinOff: boolean;
@@ -186,6 +188,7 @@ export function mapProduct(raw: RawProduct): Product {
 		typeLabel: PRODUCT_TYPE_MAP[typeId] ?? "",
 		researcher: clean(raw.a017namaper),
 		researcherNo: clean(raw.a017noper),
+		researcherEmail: clean(raw.a017emel),
 		facultyCode: clean(raw.a019singkatan),
 		trl: trl === null || Number.isNaN(trl) ? null : trl,
 		spinOff: raw.c120dspinoff === "1",
