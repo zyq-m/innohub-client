@@ -4,6 +4,8 @@
  * edit views render themselves from these definitions.
  */
 
+import { SERVICE_CATEGORIES } from "../data/serviceFacilities";
+
 export interface AdminRecord {
 	id: number;
 	slug: string;
@@ -382,12 +384,7 @@ export const resources: ResourceDef[] = [
 				name: "category",
 				label: "Service category",
 				type: "select",
-				options: [
-					"R&D",
-					"Testing & Analysis",
-					"Prototyping & Fabrication",
-					"Consultancy & Training",
-				],
+				options: SERVICE_CATEGORIES,
 			},
 			{ name: "providerUnit", label: "Provider (PTj)", type: "text" },
 			{

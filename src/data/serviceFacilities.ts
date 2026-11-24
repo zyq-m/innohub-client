@@ -1,13 +1,19 @@
-import { contentAssetUrl } from '../lib/contentApi';
+import { contentAssetUrl } from "../lib/contentApi";
 
-export type ServiceStatus = 'draft' | 'pending' | 'approved' | 'published' | 'rejected';
+export type ServiceStatus =
+	| "draft"
+	| "pending"
+	| "approved"
+	| "published"
+	| "rejected";
 
 /** Fixed T06 service categories (innohub.md). */
 export const SERVICE_CATEGORIES = [
-	'R&D',
-	'Testing & Analysis',
-	'Prototyping & Fabrication',
-	'Consultancy & Training',
+	"R&D",
+	"Testing & Analysis",
+	"Prototyping & Fabrication",
+	"Consultancy & Training",
+	"Shared Facilities & Services",
 ] as const;
 
 export type ServiceCategory = (typeof SERVICE_CATEGORIES)[number];
@@ -42,7 +48,9 @@ export function serviceFacilityPhotoUrl(path: string): string {
 }
 
 export function serviceFacilityCover(service: ServiceFacility): string {
-	return service.photos?.length ? serviceFacilityPhotoUrl(service.photos[0]) : '';
+	return service.photos?.length
+		? serviceFacilityPhotoUrl(service.photos[0])
+		: "";
 }
 
 export function serviceFacilityGallery(service: ServiceFacility): string[] {
@@ -56,15 +64,21 @@ export interface ServiceFacilityInfo {
 }
 
 /** Short label/value pairs shown in the detail sidebar (only non-empty ones). */
-export function serviceFacilityInfo(service: ServiceFacility): ServiceFacilityInfo[] {
+export function serviceFacilityInfo(
+	service: ServiceFacility,
+): ServiceFacilityInfo[] {
 	const entries: ServiceFacilityInfo[] = [
-		{ label: 'Category', value: service.category ?? '' },
-		{ label: 'Provider (PTj)', value: service.providerUnit ?? '' },
-		{ label: 'Client types', value: service.clientTypes ?? '' },
-		{ label: 'Email', value: service.contactEmail ?? '', href: service.contactEmail ? `mailto:${service.contactEmail}` : '' },
-		{ label: 'Phone', value: service.contactPhone ?? '' },
+		{ label: "Category", value: service.category ?? "" },
+		{ label: "Provider (PTj)", value: service.providerUnit ?? "" },
+		{ label: "Client types", value: service.clientTypes ?? "" },
+		{
+			label: "Email",
+			value: service.contactEmail ?? "",
+			href: service.contactEmail ? `mailto:${service.contactEmail}` : "",
+		},
+		{ label: "Phone", value: service.contactPhone ?? "" },
 	];
-	return entries.filter((entry) => entry.value.trim() !== '');
+	return entries.filter((entry) => entry.value.trim() !== "");
 }
 
 export interface ServiceFacilitySection {
@@ -73,12 +87,14 @@ export interface ServiceFacilitySection {
 }
 
 /** Long-form sections, in template order (only non-empty ones). */
-export function serviceFacilitySections(service: ServiceFacility): ServiceFacilitySection[] {
+export function serviceFacilitySections(
+	service: ServiceFacility,
+): ServiceFacilitySection[] {
 	const entries: ServiceFacilitySection[] = [
-		{ title: 'Description & usage', body: service.description ?? '' },
-		{ title: 'Expertise & key equipment', body: service.expertise ?? '' },
-		{ title: 'Scope & specifications', body: service.scope ?? '' },
-		{ title: 'Location & enquiries', body: service.location ?? '' },
+		{ title: "Description & usage", body: service.description ?? "" },
+		{ title: "Expertise & key equipment", body: service.expertise ?? "" },
+		{ title: "Scope & specifications", body: service.scope ?? "" },
+		{ title: "Location & enquiries", body: service.location ?? "" },
 	];
-	return entries.filter((entry) => entry.body.trim() !== '');
+	return entries.filter((entry) => entry.body.trim() !== "");
 }

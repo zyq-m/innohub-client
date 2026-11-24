@@ -9,6 +9,7 @@ import {
 	Linkedin,
 	MessageSquare,
 	Rocket,
+	Share2,
 	Users,
 	Wrench,
 	Youtube,
@@ -239,6 +240,12 @@ export const services: Service[] = [
 	{
 		icon: MessageSquare,
 		label: "Consultancy & Training",
+		detail:
+			"Expert guidance, feasibility studies and hands-on training for partners.",
+	},
+	{
+		icon: Share2,
+		label: "Shared Facilities & Services",
 		detail:
 			"Expert guidance, feasibility studies and hands-on training for partners.",
 	},
