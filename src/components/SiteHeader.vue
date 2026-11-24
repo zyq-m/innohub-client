@@ -5,8 +5,6 @@
 	import { useMarketplace } from "../composables/useMarketplace";
 	import { content, navLinks } from "../data/site";
 
-	const emit = defineEmits<{ (e: "search"): void }>();
-
 	const route = useRoute();
 	const { state, closeMobileMenu } = useMarketplace();
 
@@ -78,14 +76,14 @@
 					></span>
 					{{ link.label }}
 				</RouterLink>
-				<button
+
+				<RouterLink
+					:to="{ name: 'search' }"
 					class="flex h-9 w-9 items-center justify-center self-start text-white transition hover:text-gold md:self-auto"
-					type="button"
-					@click="emit('search')"
-					aria-label="Search"
+					aria-label="Search InnoHub"
 				>
 					<Search class="h-[1.05rem] w-[1.05rem]" />
-				</button>
+				</RouterLink>
 			</div>
 		</nav>
 	</header>

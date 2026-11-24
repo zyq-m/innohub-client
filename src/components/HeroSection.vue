@@ -1,20 +1,16 @@
 <script setup lang="ts">
 	import { ChevronRight, Search } from "lucide-vue-next";
-	import { computed, onBeforeUnmount, onMounted, ref, watchEffect } from "vue";
-	import { RouterLink } from "vue-router";
+	import { computed, onBeforeUnmount, onMounted, ref } from "vue";
+	import { RouterLink, useRouter } from "vue-router";
 	import heroFallback from "../assets/hero.png";
-	import { registerHeroSearch } from "../composables/useHeroSearch";
 	import { useMarketplace } from "../composables/useMarketplace";
-	import { useProducts } from "../composables/useProducts";
 	import { content, pathwayIconColors, pathways, popular } from "../data/site";
 	import { contentAssetUrl } from "../lib/contentApi";
 	import { fetchHeroSetting } from "../services/hero";
 
-	const { filters, setFilters } = useProducts();
+	const router = useRouter();
 	const { closeMobileMenu } = useMarketplace();
-
-	const searchInput = ref<HTMLInputElement | null>(null);
-	watchEffect(() => registerHeroSearch(searchInput.value));
+	const q = ref("");
 
 	const uploadedImages = ref<string[]>([]);
 	const activeSlide = ref(0);
@@ -47,15 +43,15 @@
 	});
 
 	function goToResults() {
-		document
-			.getElementById("innovations")
-			?.scrollIntoView({ behavior: "smooth", block: "start" });
+		const query = q.value.trim();
+		closeMobileMenu();
+		router.push({ name: "search", query: query ? { q: query } : {} });
 	}
 
 	function searchFor(term: string) {
-		setFilters({ name: term });
+		q.value = term;
 		closeMobileMenu();
-		goToResults();
+		router.push({ name: "search", query: { q: term } });
 	}
 </script>
 
@@ -101,8 +97,7 @@
 					>
 					<input
 						id="hero-search"
-						ref="searchInput"
-						v-model.trim="filters.name"
+						v-model.trim="q"
 						type="search"
 						placeholder="Search innovations, technologies, services…"
 						aria-label="Search the marketplace"

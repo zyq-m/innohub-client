@@ -94,7 +94,7 @@ const routes: RouteRecordRaw[] = [
 		path: "/community",
 		name: "community",
 		component: () => import("../views/CommunityProductsView.vue"),
-		meta: { title: "Community Innovation" },
+		meta: { title: "Community / Industry Product Innovation" },
 	},
 	{
 		path: "/community/news",
@@ -122,6 +122,12 @@ const routes: RouteRecordRaw[] = [
 		path: "/services/:slug",
 		name: "service-facility",
 		component: () => import("../views/ServiceFacilityDetailView.vue"),
+	},
+	{
+		path: "/search",
+		name: "search",
+		component: () => import("../views/SearchView.vue"),
+		meta: { title: "Search" },
 	},
 	{
 		path: "/about",
