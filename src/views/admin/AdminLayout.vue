@@ -60,7 +60,7 @@
 			icon: FlaskConical,
 		},
 		{
-			label: "Community Innovation",
+			label: "Community / Industry Product Innovation",
 			to: { name: "admin-list", params: { resource: "community-products" } },
 			match: "/admin/community-products",
 			icon: Package,

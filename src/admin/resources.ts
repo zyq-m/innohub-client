@@ -294,7 +294,7 @@ export const resources: ResourceDef[] = [
 	},
 	{
 		key: "community-products",
-		label: "Community Innovation",
+		label: "Community / Industry Product Innovation",
 		singular: "Community product",
 		endpoint: "/admin/community-products",
 		titleField: "productName",

@@ -1,69 +1,92 @@
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
-import { AlertCircle, Newspaper, RotateCw, Search, Users } from 'lucide-vue-next';
-import CommunityProductCard from '../components/CommunityProductCard.vue';
-import { fetchCommunityProducts, type CommunityProductListMeta } from '../services/communityProducts';
-import type { CommunityProduct } from '../data/communityProducts';
+	import {
+		AlertCircle,
+		Newspaper,
+		RotateCw,
+		Search,
+		Users,
+	} from "lucide-vue-next";
+	import { onMounted, ref, watch } from "vue";
+	import { useRoute, useRouter } from "vue-router";
+	import CommunityProductCard from "../components/CommunityProductCard.vue";
+	import type { CommunityProduct } from "../data/communityProducts";
+	import {
+		fetchCommunityProducts,
+		type CommunityProductListMeta,
+	} from "../services/communityProducts";
 
-const route = useRoute();
-const router = useRouter();
+	const route = useRoute();
+	const router = useRouter();
 
-const q = ref(typeof route.query.q === 'string' ? route.query.q : '');
-const rows = ref<CommunityProduct[]>([]);
-const meta = ref<CommunityProductListMeta | null>(null);
-const loading = ref(true);
-const loadingMore = ref(false);
-const error = ref('');
-const page = ref(1);
+	const q = ref(typeof route.query.q === "string" ? route.query.q : "");
+	const rows = ref<CommunityProduct[]>([]);
+	const meta = ref<CommunityProductListMeta | null>(null);
+	const loading = ref(true);
+	const loadingMore = ref(false);
+	const error = ref("");
+	const page = ref(1);
 
-async function load(reset: boolean): Promise<void> {
-	if (reset) {
-		loading.value = true;
-		error.value = '';
-	} else {
-		loadingMore.value = true;
+	async function load(reset: boolean): Promise<void> {
+		if (reset) {
+			loading.value = true;
+			error.value = "";
+		} else {
+			loadingMore.value = true;
+		}
+		const requestedPage = reset ? 1 : page.value + 1;
+
+		try {
+			const result = await fetchCommunityProducts({
+				q: q.value,
+				page: requestedPage,
+				limit: 12,
+			});
+			page.value = result.meta.page;
+			rows.value = reset ? result.rows : [...rows.value, ...result.rows];
+			meta.value = result.meta;
+		} catch (err) {
+			error.value =
+				err instanceof Error
+					? err.message
+					: "Unable to load community products.";
+		} finally {
+			loading.value = false;
+			loadingMore.value = false;
+		}
 	}
-	const requestedPage = reset ? 1 : page.value + 1;
 
-	try {
-		const result = await fetchCommunityProducts({ q: q.value, page: requestedPage, limit: 12 });
-		page.value = result.meta.page;
-		rows.value = reset ? result.rows : [...rows.value, ...result.rows];
-		meta.value = result.meta;
-	} catch (err) {
-		error.value = err instanceof Error ? err.message : 'Unable to load community products.';
-	} finally {
-		loading.value = false;
-		loadingMore.value = false;
-	}
-}
-
-function retry(): void {
-	void load(true);
-}
-
-let debounce: ReturnType<typeof setTimeout> | undefined;
-watch(q, () => {
-	clearTimeout(debounce);
-	debounce = setTimeout(() => {
-		void router.replace({ name: 'community', query: q.value ? { q: q.value } : {} });
+	function retry(): void {
 		void load(true);
-	}, 300);
-});
+	}
 
-onMounted(() => void load(true));
+	let debounce: ReturnType<typeof setTimeout> | undefined;
+	watch(q, () => {
+		clearTimeout(debounce);
+		debounce = setTimeout(() => {
+			void router.replace({
+				name: "community",
+				query: q.value ? { q: q.value } : {},
+			});
+			void load(true);
+		}, 300);
+	});
+
+	onMounted(() => void load(true));
 </script>
 
 <template>
-	<section class="bg-[linear-gradient(110deg,#061a39,#0a2854)] py-9 text-white md:py-12">
+	<section
+		class="bg-[linear-gradient(110deg,#061a39,#0a2854)] py-9 text-white md:py-12"
+	>
 		<div class="mx-auto max-w-[1180px] px-5">
-			<h1 class="mb-1.5 mt-0 text-[1.6rem] font-extrabold tracking-[-.03em] lg:text-[2rem]">
-				Community Innovation
+			<h1
+				class="mb-1.5 mt-0 text-[1.6rem] font-extrabold tracking-[-.03em] lg:text-[2rem]"
+			>
+				Community / Industry Product Innovation
 			</h1>
 			<p class="m-0 max-w-[640px] text-[.85rem] text-white/75">
-				Community-driven products and solutions from UniSZA that address local needs and
-				improve livelihoods across Terengganu.
+				Community-driven products and solutions from UniSZA that address local
+				needs and improve livelihoods across Terengganu.
 			</p>
 
 			<RouterLink
@@ -79,7 +102,9 @@ onMounted(() => void load(true));
 				role="search"
 				@submit.prevent="void load(true)"
 			>
-				<label class="sr-only" for="community-search">Search community products</label>
+				<label class="sr-only" for="community-search"
+					>Search community products</label
+				>
 				<Search class="h-4 w-4 shrink-0 text-muted" />
 				<input
 					id="community-search"
@@ -97,7 +122,7 @@ onMounted(() => void load(true));
 			<p class="m-0 text-[.8rem] text-muted" aria-live="polite">
 				<template v-if="loading">Loading products…</template>
 				<template v-else-if="meta">
-					{{ meta.total }} {{ meta.total === 1 ? 'product' : 'products' }}
+					{{ meta.total }} {{ meta.total === 1 ? "product" : "products" }}
 					<span v-if="q">matching “{{ q }}”</span>
 				</template>
 			</p>
@@ -128,26 +153,40 @@ onMounted(() => void load(true));
 			></div>
 		</div>
 
-		<div v-else-if="!rows.length" class="rounded-[12px] border border-line bg-white p-8 text-center">
+		<div
+			v-else-if="!rows.length"
+			class="rounded-[12px] border border-line bg-white p-8 text-center"
+		>
 			<Users class="mx-auto mb-3 h-8 w-8 text-muted" />
-			<p class="m-0 text-[.88rem] font-semibold text-navy">No community products found.</p>
+			<p class="m-0 text-[.88rem] font-semibold text-navy">
+				No community products found.
+			</p>
 			<p class="mb-4 mt-1 text-[.8rem] text-muted">Try a different keyword.</p>
-			<button v-if="q" type="button" class="outline-btn" @click="q = ''">Clear search</button>
+			<button v-if="q" type="button" class="outline-btn" @click="q = ''">
+				Clear search
+			</button>
 		</div>
 
 		<template v-else>
 			<div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-				<CommunityProductCard v-for="product in rows" :key="product.id" :product="product" />
+				<CommunityProductCard
+					v-for="product in rows"
+					:key="product.id"
+					:product="product"
+				/>
 			</div>
 
-			<div v-if="meta && page < meta.totalPages" class="mt-8 flex justify-center">
+			<div
+				v-if="meta && page < meta.totalPages"
+				class="mt-8 flex justify-center"
+			>
 				<button
 					type="button"
 					class="outline-btn disabled:opacity-60"
 					:disabled="loadingMore"
 					@click="void load(false)"
 				>
-					{{ loadingMore ? 'Loading…' : 'Load more' }}
+					{{ loadingMore ? "Loading…" : "Load more" }}
 				</button>
 			</div>
 		</template>
