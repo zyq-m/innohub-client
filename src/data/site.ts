@@ -47,8 +47,6 @@ export interface Content {
 	newsletter_button: string;
 	footer_tagline: string;
 	footer_text: string;
-	about_heading: string;
-	about_lead: string;
 	trl_title: string;
 	trl_text: string;
 	trl_help: string;
@@ -141,9 +139,6 @@ export const content: Content = {
 	newsletter_button: "Join the list",
 	footer_tagline: "IDEAS. PARTNERS. IMPACT.",
 	footer_text: "A meeting place for research, industry and communities.",
-	about_heading: "About InnoHub",
-	about_lead:
-		"InnoHub is the meeting place between research, industry and communities — where research-led ideas become products, services and partnerships that matter.",
 	trl_title: "Technology Readiness Level (TRL)",
 	trl_text: "From early research to market-ready solutions.",
 	trl_help:
@@ -199,7 +194,7 @@ export const pathways: Pathway[] = [
 	},
 	{
 		icon: Users,
-		title: "Community Innovation",
+		title: "Community / Industry Product Innovation",
 		description: "Innovations for society",
 		target: "collaborate",
 		route: "/community",
@@ -277,8 +272,7 @@ export const navLinks: NavLink[] = [
 	{ label: "Home", path: "/", hash: "", active: true },
 	{ label: "Innovations", path: "/innovations", hash: "" },
 	{ label: "Services & Facilities", path: "/services", hash: "" },
-	{ label: "Collaborate", path: "/contact", hash: "" },
-	{ label: "About Us", path: "/about", hash: "" },
+	{ label: "Contact Us", path: "/contact", hash: "" },
 ];
 
 export const footerExplore: SiteLink[] = [
@@ -286,7 +280,7 @@ export const footerExplore: SiteLink[] = [
 	{ label: "Spin-off companies", path: "/spin-offs" },
 	{ label: "CoE / institutes", path: "/centres" },
 	{ label: "Cluster / SIG / RG", path: "/research-partners" },
-	{ label: "Community innovation", path: "/community" },
+	{ label: "Community / Industry Product Innovation", path: "/community" },
 	{ label: "Community news", path: "/community/news" },
 	{ label: "Services & facilities", path: "/services" },
 	{ label: "Success stories", path: "/stories" },
@@ -294,7 +288,6 @@ export const footerExplore: SiteLink[] = [
 
 export const footerConnect: SiteLink[] = [
 	{ label: "Contact us", path: "/contact" },
-	{ label: "About us", path: "/about" },
 ];
 
 const socialIcons = {
