@@ -20,7 +20,9 @@
 	<template v-else>
 		<SiteHeader />
 
-		<RouterView />
+		<div class="flex flex-1 flex-col">
+			<RouterView />
+		</div>
 
 		<!-- <NewsletterBar /> -->
 		<SiteFooter />

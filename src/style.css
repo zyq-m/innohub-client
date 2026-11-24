@@ -29,6 +29,13 @@
 		background: radial-gradient(ellipse at 50% 40%, #fff 0, #f1f6fa 70%);
 	}
 
+	#app {
+		display: flex;
+		flex-direction: column;
+		min-height: 100vh;
+		min-height: 100dvh;
+	}
+
 	:focus-visible {
 		outline: 3px solid #159fb6;
 		outline-offset: 4px;
