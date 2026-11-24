@@ -161,6 +161,16 @@ function parseFiles(raw: string | null | undefined): ProductFile[] {
 	}
 }
 
+function parseVideo(raw: string | null | undefined): string {
+	if (!raw) return "";
+	const files = parseFiles(raw);
+	if (files[0]?.url) return files[0].url;
+	const trimmed = raw.trim();
+	if (!trimmed || trimmed.startsWith("[") || trimmed.startsWith("{")) return "";
+	if (/^https?:\/\//i.test(trimmed)) return trimmed;
+	return assetUrl(trimmed);
+}
+
 export function clamp(text: string, length = SUMMARY_LENGTH): string {
 	if (text.length <= length) return text;
 	const cut = text.slice(0, length);
@@ -198,7 +208,7 @@ export function mapProduct(raw: RawProduct): Product {
 		image: images[0]?.url ?? "",
 		images,
 		documents: parseFiles(raw.c120ddoc),
-		videoUrl: raw.c120dvideo ? assetUrl(raw.c120dvideo) : "",
+		videoUrl: parseVideo(raw.c120dvideo),
 		innovation: multiLine(raw.c120dciriproduk),
 		requirement: multiLine(raw.c120dkeperluan),
 		application: multiLine(raw.c120daplikasi),
